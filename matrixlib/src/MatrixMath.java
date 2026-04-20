@@ -51,6 +51,14 @@ public class MatrixMath {
         theMatrix.editRow(mappedData, theRow);
     }
 
+    /**
+     * This function returns a scaled row from a selected Matrix.
+     *
+     * @param theMatrix The matrix to access
+     * @param theRow The row to access from the matrix
+     * @param scalar The scalar to apply to each value in the row
+     * @return A double array
+     */
     public static double[] getScaledRow(final Matrix theMatrix, final int theRow, final double scalar) {
         theMatrix.validateRow(theRow);
         double[] data = theMatrix.getRow(theRow).clone();
@@ -78,10 +86,10 @@ public class MatrixMath {
     }
 
     /**
+     * Returns a matrix which has been put into Row Echelon Form
      *
-     *
-     * @param theMatrix
-     * @return
+     * @param theMatrix The matrix to work on
+     * @return Another Matrix in Row Echelon Form
      */
     public static Matrix ref(final Matrix theMatrix) {
         // What to do when current spot already 0?
@@ -98,14 +106,38 @@ public class MatrixMath {
         }
         // Copied matrix
 
-        for (int i = 0; i < theMatrix.myColumns - 1; i++) {
-            if(!columnEmpty(theMatrix, i)) {
-
+        for (int i = 0; i < outputMatrix.myRows - 1; i++) {
+            if (!columnEmpty(outputMatrix, i)) {
+                // Make sure current leading variable is not zero
+                while(outputMatrix.getRow(i)[i] == 0) {
+                    boolean foundLeadingVar = false;
+                    int currentRow = i;
+                    while(!foundLeadingVar) {
+                        // Get next row
+                        outputMatrix.validateRow(i);
+                        // Since we know the column is not empty (there exists at least one non-zero)
+                        // This validate should NEVER fail
+                        double[] nextRow = outputMatrix.getRow(currentRow);
+                        if (nextRow[i] != 0) {
+                            swapRow(outputMatrix, currentRow, i);
+                            foundLeadingVar = true;
+                        } else {
+                            currentRow++;
+                        }
+                    }
+                }
+                // We know that the current column is NOT empty and that there
+                // is a leading variable
+                double[] workingRow = outputMatrix.getRow(i);
+                for (int j = i+1; j < outputMatrix.myRows; j++) {
+                    outputMatrix.validateRow(j);
+                    double[] rowToEdit = outputMatrix.getRow(j);
+                    double scalar = rowToEdit[i] / workingRow[i];
+                    addRow(outputMatrix, j, getScaledRow(outputMatrix, i, (-1) * scalar));
+                }
             }
         }
-
-        //TODO Finish this shit lmao
-        return new Matrix(0,0,'A');
+        return(outputMatrix);
     }
 
     private static boolean columnEmpty(final Matrix theMatrix, final int theColumn) {
@@ -115,5 +147,13 @@ public class MatrixMath {
             }
         }
         return true;
+    }
+
+    static void main() {
+        Matrix theMatrix = new Matrix(3, 4, 'A');
+        theMatrix.editRow(new double[]{1, 2, 3, 1}, 0);
+        theMatrix.editRow(new double[]{4, 5, 6, 1}, 1);
+        theMatrix.editRow(new double[]{7, 8, 9, 1}, 2);
+        Matrix ref = (theMatrix);
     }
 }
