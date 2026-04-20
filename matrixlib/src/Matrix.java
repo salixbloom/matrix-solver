@@ -13,7 +13,7 @@ public class Matrix {
     protected char myName;
     // Have boolean defining it as augmented?
 
-    private float[][] myData;
+    private final double[][] myData;
 
     /**
      * Constructor for a matrix object. A matrix object's data must be passed after it's been constructed.
@@ -26,7 +26,7 @@ public class Matrix {
         myRows = theRows;
         myColumns = theColumns;
         myName = theName;
-        myData = new float[theRows][theColumns];
+        myData = new double[theRows][theColumns];
     }
 
     /**
@@ -34,21 +34,19 @@ public class Matrix {
      *
      * @param theData The float array containing the data for the Matrix.
      * @param theRow The row where the data will be stored.
-     * @throws InvalidInputException If theData width (size) does not match the matrix width.
-     * @throws InvalidInputException If theRow is greater than the height of the matrix.
+     * @throws IllegalArgumentException If theData width (size) does not match the matrix width.
+     * @throws IllegalArgumentException If theRow is greater than the height of the matrix.
      * @throws IllegalArgumentException If theRow is negative.
      */
-    public void editRow(final float[] theData, final int theRow) {
+    public void editRow(final double[] theData, final int theRow) {
         if (theData.length != myColumns) {
-            throw new InvalidInputException("The row of size " + (String) theData.length
-                    + " does not fit in matrix of width " + (String) myColumns);
+            throw new IllegalArgumentException("The row of size " + theData.length
+                    + " does not fit in matrix of width " + myColumns);
         }
         validateRow(theRow);
 
-        float[] rowToEdit = myData[theRow];
-        for (int i = 0; i < myColumns; i++) {
-            rowToEdit[i] = myData[i];
-        }
+        double[] rowToEdit = myData[theRow];
+        if (myColumns >= 0) System.arraycopy(theData, 0, rowToEdit, 0, myColumns);
     }
 
     /**
@@ -57,17 +55,17 @@ public class Matrix {
      * @param theRow The row to be returned.
      * @return The data inside the row at theRow of the matrix.
      */
-    public float[] getRow(final int theRow) {
+    public double[] getRow(final int theRow) {
         validateRow(theRow);
         return myData[theRow];
     }
 
-    private void validateRow(final int theRow) {
+    protected void validateRow(final int theRow) {
         if(theRow < 0) {
-            throw new IllegalArgumentException("The row to edit must be positive")
+            throw new IllegalArgumentException("The row to edit must be positive");
         } else if(theRow > myRows) {
-            throw new InvalidInputException("The row to edit must be less than the matrix height of "
-                    + (String) myRows);
+            throw new IllegalArgumentException("The row to edit must be less than the matrix height of "
+                    + myRows);
         }
     }
 }
