@@ -107,7 +107,7 @@ public class MatrixMath {
         // Copied matrix
 
         for (int i = 0; i < outputMatrix.myRows - 1; i++) {
-            if (!columnEmpty(outputMatrix, i)) {
+            if (columnNotEmpty(outputMatrix, i)) {
                 // Make sure current leading variable is not zero
                 while(outputMatrix.getRow(i)[i] == 0) {
                     boolean foundLeadingVar = false;
@@ -140,13 +140,44 @@ public class MatrixMath {
         return(outputMatrix);
     }
 
-    private static boolean columnEmpty(final Matrix theMatrix, final int theColumn) {
-        for(int i = 0; i < theMatrix.myRows; i++) {
-            if(theMatrix.getRow(i)[theColumn] != 0){
-                return false;
+    /**
+     * Function to get the row reduced echelon form of a given Matrix.
+     *
+     * @param theMatrix The Matrix to get the row reduced echelon form result from
+     * @return A Matrix in row reduced echelon form
+     */
+    public static Matrix rref(final Matrix theMatrix) {
+        // Get ref form and do back substitution
+        Matrix outputMatrix = ref(theMatrix);
+
+        for (int i = outputMatrix.myRows - 1; i >= 0; i--) {
+            if (columnNotEmpty(theMatrix, i)) {
+                double leadingVariable = outputMatrix.getRow(i)[i];
+                double epsilon = 1e-6;
+                // leadingVariable may be incredibly close to 0 but not exactly zero
+                if (Math.abs(leadingVariable) > epsilon) {
+                    // Scale row to 1
+                    double scalar = 1 / leadingVariable;
+                    System.out.println(scalar);
+                    scaleRow(outputMatrix, i, scalar);
+
+                    for (int j = i - 1; j >= 0; j--) {
+                        double variableToRemove = outputMatrix.getRow(j)[i];
+                        addRow(outputMatrix, j, getScaledRow(outputMatrix, i, (-1) * variableToRemove));
+                    }
+                }
             }
         }
-        return true;
+        return outputMatrix;
+    }
+
+    private static boolean columnNotEmpty(final Matrix theMatrix, final int theColumn) {
+        for(int i = 0; i < theMatrix.myRows; i++) {
+            if(theMatrix.getRow(i)[theColumn] != 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     static void main() {
@@ -154,6 +185,9 @@ public class MatrixMath {
         theMatrix.editRow(new double[]{1, 2, 3, 1}, 0);
         theMatrix.editRow(new double[]{4, 5, 6, 1}, 1);
         theMatrix.editRow(new double[]{7, 8, 9, 1}, 2);
-        Matrix ref = (theMatrix);
+        Matrix ref = ref(theMatrix);
+        Matrix rref = rref(theMatrix);
+
+        System.out.println("hi");
     }
 }
