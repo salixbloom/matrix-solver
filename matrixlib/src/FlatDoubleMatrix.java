@@ -250,7 +250,7 @@ public class FlatDoubleMatrix {
     }
 
     /**
-     * Compares this matrix to the specified object for equality. Two matricies are considered equal if they
+     * Compares this matrix to the specified object for equality. Two matrices are considered equal if they
      * have the same number of rows, columns, and elements.
      *
      * @param theObj   the reference object with which to compare to this matrix.
@@ -273,7 +273,7 @@ public class FlatDoubleMatrix {
 
     /**
      * Returns a hash code for this matrix, derived from its row count, column count, and element data.
-     * Two matricies that are equal will return the same hash code.
+     * Two matrices that are equal will return the same hash code.
      *
      * @return a hash code value for this matrix.
      */
