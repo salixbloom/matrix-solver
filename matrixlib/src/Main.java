@@ -1,13 +1,30 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    IO.println(String.format("Hello and welcome!"));
+import java.util.Arrays;
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+/**
+ * Smoke test, delete later.
+ */
+public class Main {
+    public static void main(String[] theArgs) {
+        FlatDoubleMatrix flatDoubleMatrix = new FlatDoubleMatrix(3, 3);
+        double[] row1 = {1, 2, 3};
+        double[] row2 = {4, 5, 6};
+        double[] row3 = {7, 8, 9};
+        flatDoubleMatrix.setRow(row1, 1);
+        flatDoubleMatrix.setRow(row2, 2);
+        flatDoubleMatrix.setRow(row3, 3);
+        System.out.println(flatDoubleMatrix);
+
+        flatDoubleMatrix.setCell(0, 2, 2);
+        System.out.println(flatDoubleMatrix);
+
+        double[] column3 = {9, 6, 3};
+        flatDoubleMatrix.setColumn(column3, 3);
+        System.out.println(flatDoubleMatrix);
+
+        System.out.println(flatDoubleMatrix.getCell(3, 2));
+        System.out.println(Arrays.toString(flatDoubleMatrix.getColumn(1)));
+        System.out.println(Arrays.toString(flatDoubleMatrix.getRow(2)));
+        System.out.println(flatDoubleMatrix.getRows());
+        System.out.println(flatDoubleMatrix.getColumns());
     }
 }
